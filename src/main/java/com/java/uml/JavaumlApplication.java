@@ -9,9 +9,13 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 import com.java.uml.domain.Category;
+import com.java.uml.domain.City;
 import com.java.uml.domain.Product;
+import com.java.uml.domain.State;
 import com.java.uml.repositories.CategoryRepository;
+import com.java.uml.repositories.CityRepository;
 import com.java.uml.repositories.ProductRepository;
+import com.java.uml.repositories.StateRepository;
 
 @SpringBootApplication
 public class JavaumlApplication implements CommandLineRunner {
@@ -20,6 +24,10 @@ public class JavaumlApplication implements CommandLineRunner {
 	private CategoryRepository categoryRepository;
 	@Autowired
 	private ProductRepository productRepository;
+	@Autowired
+	private StateRepository stateRepository;
+	@Autowired
+	private CityRepository cityRepository;
 	
 	
 	public static void main(String[] args) {
@@ -45,5 +53,18 @@ public class JavaumlApplication implements CommandLineRunner {
 		
 		categoryRepository.saveAll(Arrays.asList(cat1,cat2));
 		productRepository.saveAll(Arrays.asList(p1,p2,p3));
+		
+		State st1 = new State (null, "Minas Gerais");
+		State st2 = new State (null, "São Paulo");
+		
+		City ct1 = new City (null, "Uberlândia",st1);
+		City ct2 = new City (null, "São Paulo",st2);
+		City ct3 = new City (null, "Campinas",st2);
+		
+		st1.getCities().addAll(Arrays.asList(ct1));
+		st1.getCities().addAll(Arrays.asList(ct2,ct3));
+		
+		stateRepository.saveAll(Arrays.asList(st1,st2));
+		cityRepository.saveAll(Arrays.asList(ct1,ct2,ct3));
 	}
 }
