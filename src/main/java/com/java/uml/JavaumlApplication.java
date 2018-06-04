@@ -1,6 +1,7 @@
 package com.java.uml;
 
 
+import java.text.SimpleDateFormat;
 import java.util.Arrays;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,13 +13,20 @@ import com.java.uml.domain.Adress;
 import com.java.uml.domain.Category;
 import com.java.uml.domain.City;
 import com.java.uml.domain.Client;
+import com.java.uml.domain.Request;
+import com.java.uml.domain.Payment;
+import com.java.uml.domain.PaymentBankSlip;
+import com.java.uml.domain.PaymentCreditCard;
 import com.java.uml.domain.Product;
 import com.java.uml.domain.State;
+import com.java.uml.domain.enums.StatePayment;
 import com.java.uml.domain.enums.TypeClient;
 import com.java.uml.repositories.AdressRepository;
 import com.java.uml.repositories.CategoryRepository;
 import com.java.uml.repositories.CityRepository;
 import com.java.uml.repositories.ClientRepository;
+import com.java.uml.repositories.RequestRepository;
+import com.java.uml.repositories.PaymentRepository;
 import com.java.uml.repositories.ProductRepository;
 import com.java.uml.repositories.StateRepository;
 
@@ -37,6 +45,10 @@ public class JavaumlApplication implements CommandLineRunner {
 	private ClientRepository clientRepository;
 	@Autowired
 	private AdressRepository adressRepository;
+	@Autowired
+	private PaymentRepository paymentRepository;
+	@Autowired
+	private RequestRepository requestRepository;
 	
 	
 	
@@ -89,6 +101,22 @@ public class JavaumlApplication implements CommandLineRunner {
 		
 		clientRepository.saveAll(Arrays.asList(cl1));
 		adressRepository.saveAll(Arrays.asList(adr1,adr2));
+		
+		SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyy hh:mm");
+		
+		Request req1 = new Request(null, sdf.parse("30/01/2000 08:00"),cl1,adr1);
+		Request req2 = new Request(null, sdf.parse("31/02/2010 09:00"),cl1,adr2);
+		
+		Payment pay1 = new PaymentBankSlip(null, StatePayment.PENDING, req2, sdf.parse("29/03/2024 04:00"),null);
+		req2.setPayment(pay1);
+		
+		Payment pay2 = new PaymentCreditCard(null, StatePayment.SETTLED, req1, 6);
+		req2.setPayment(pay2);
+		
+		cl1.getRequests().addAll(Arrays.asList(req1,req2));
+		
+		paymentRepository.saveAll(Arrays.asList(pay1,pay2));
+		requestRepository.saveAll(Arrays.asList(req1,req2));
 		
 	}
 }
