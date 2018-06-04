@@ -2,7 +2,9 @@ package com.java.uml.domain;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -11,6 +13,7 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
+import javax.persistence.OneToMany;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 
@@ -34,6 +37,9 @@ public class Product implements Serializable {
 	)
 	private List<Category> categories = new ArrayList<>();
 	
+	@OneToMany(mappedBy="id.product")
+	private Set<RequestItem> itens = new HashSet<>();
+	
 	public Product(){
 	}
 
@@ -44,6 +50,15 @@ public class Product implements Serializable {
 		this.price = price;
 	}
 
+	public List<Request> getRequests(){
+		List<Request> list = new ArrayList<>();
+		for (RequestItem x : itens) {
+			list.add(x.getRequest());
+		}
+		return list;
+	}
+	
+	
 	public Integer getId() {
 		return id;
 	}
@@ -76,6 +91,14 @@ public class Product implements Serializable {
 		this.categories = categories;
 	}
 
+	public Set<RequestItem> getItens() {
+		return itens;
+	}
+
+	public void setItens(Set<RequestItem> itens) {
+		this.itens = itens;
+	}
+	
 	@Override
 	public int hashCode() {
 		final int prime = 31;

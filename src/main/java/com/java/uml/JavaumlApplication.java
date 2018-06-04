@@ -14,6 +14,7 @@ import com.java.uml.domain.Category;
 import com.java.uml.domain.City;
 import com.java.uml.domain.Client;
 import com.java.uml.domain.Request;
+import com.java.uml.domain.RequestItem;
 import com.java.uml.domain.Payment;
 import com.java.uml.domain.PaymentBankSlip;
 import com.java.uml.domain.PaymentCreditCard;
@@ -28,6 +29,7 @@ import com.java.uml.repositories.ClientRepository;
 import com.java.uml.repositories.RequestRepository;
 import com.java.uml.repositories.PaymentRepository;
 import com.java.uml.repositories.ProductRepository;
+import com.java.uml.repositories.RequestItemRepository;
 import com.java.uml.repositories.StateRepository;
 
 @SpringBootApplication
@@ -49,6 +51,8 @@ public class JavaumlApplication implements CommandLineRunner {
 	private PaymentRepository paymentRepository;
 	@Autowired
 	private RequestRepository requestRepository;
+	@Autowired
+	private RequestItemRepository requestItemRepository;
 	
 	
 	
@@ -117,6 +121,19 @@ public class JavaumlApplication implements CommandLineRunner {
 		
 		paymentRepository.saveAll(Arrays.asList(pay1,pay2));
 		requestRepository.saveAll(Arrays.asList(req1,req2));
+		
+		RequestItem ri1 = new RequestItem(req1, p1, 0.00, 2000.00, 1);
+		RequestItem ri2 = new RequestItem(req1, p3, 0.00, 80.00, 2);
+		RequestItem ri3 = new RequestItem(req2, p2, 100.00, 700.00, 1);
+		
+		req1.getItens().addAll(Arrays.asList(ri1,ri2));
+		req2.getItens().addAll(Arrays.asList(ri3));
+		
+		p1.getItens().addAll(Arrays.asList(ri1));
+		p2.getItens().addAll(Arrays.asList(ri3));
+		p3.getItens().addAll(Arrays.asList(ri2));
+		
+		requestItemRepository.saveAll(Arrays.asList(ri1,ri2,ri3));
 		
 	}
 }

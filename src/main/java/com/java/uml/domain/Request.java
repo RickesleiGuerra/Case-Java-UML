@@ -2,6 +2,8 @@ package com.java.uml.domain;
 
 import java.io.Serializable;
 import java.util.Date;
+import java.util.HashSet;
+import java.util.Set;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
@@ -10,6 +12,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 
 @Entity
@@ -32,6 +35,9 @@ public class Request implements Serializable {
 	@ManyToOne
 	@JoinColumn(name="delivery_adress_id")
 	private Adress deliveryAdress;
+	
+	@OneToMany(mappedBy="id.request")
+	private Set<RequestItem> itens = new HashSet<>();
 	
 	public Request() {
 		
@@ -85,6 +91,14 @@ public class Request implements Serializable {
 		this.deliveryAdress = deliveryAdress;
 	}
 
+	public Set<RequestItem> getItens() {
+		return itens;
+	}
+
+	public void setItens(Set<RequestItem> itens) {
+		this.itens = itens;
+	}	
+	
 	@Override
 	public int hashCode() {
 		final int prime = 31;
@@ -108,5 +122,5 @@ public class Request implements Serializable {
 		} else if (!id.equals(other.id))
 			return false;
 		return true;
-	}	
+	}
 }
